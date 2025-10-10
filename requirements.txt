@@ -5,3 +5,4 @@ tqdm
 faiss-cpu
 openai
 python-dotenv
+matplotlib
