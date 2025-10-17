@@ -5,3 +5,4 @@ env
 *.json
 *.npy
 data/
+__pycache__/
