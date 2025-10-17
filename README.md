@@ -17,7 +17,7 @@ pip install -r requirements.txt
 # .env file
 OPENAI_KEY="your_openai_api_key"
 ```
-4. Download the datasets folder and paste it in the root directory.
+4. Download the datasets folder and paste it in the root directory (not publicly available for the moment).
 ```txt
 green_skill_RAG_system
 ├── data <-- Download this folder and paste it here
@@ -66,6 +66,9 @@ green_skill_RAG_system
 * **Skill/Competence:** Skill means the ability to apply knowledge and use know-how to complete tasks and solve problems
 
 > Source: [European Skills, Competences, Qualifications and Occupations (ESCO)](https://esco.ec.europa.eu/en/about-esco/escopedia/escopedia/knowledge)
+
+## Esco taxonomy
+The ESCO taxonomy can be downloaded from [here](https://ec.europa.eu/newsroom/empl/items/741088/en). The data used in this project is from version `1.2.0`.
 
 # Authors
 * PhD. Sabur Butt
