@@ -6,3 +6,5 @@ faiss-cpu
 openai
 python-dotenv
 matplotlib
+jsonschema
+pydantic
