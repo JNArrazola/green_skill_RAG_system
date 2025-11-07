@@ -161,7 +161,6 @@ def predict_future(exp, setting, future_steps=3, load_best=True):
     # Load the best model checkpoint
     if load_best:
         best_model_path = os.path.join(args.checkpoints, setting, 'checkpoint.pth')
-        print(f"Loading best model from {best_model_path}")
         exp.model.load_state_dict(torch.load(best_model_path, map_location=device))
 
     exp.model.eval() # set model to evaluation mode
