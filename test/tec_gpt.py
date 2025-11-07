@@ -9,7 +9,7 @@ ENDPOINT = os.getenv("ENDPOINT")
 DEPLOYMENT = os.getenv("DEPLOYMENT")    
 API_VERSION = os.getenv("API_VERSION")
 
-# Client setup
+
 client = OpenAI(
     base_url=f"{ENDPOINT}openai/deployments/{DEPLOYMENT}/",
     api_key=API_KEY,
@@ -19,12 +19,11 @@ client = OpenAI(
 
 # Test request
 response = client.chat.completions.create(
-    model=DEPLOYMENT,  # deployment name
+    model=DEPLOYMENT,  
     messages=[
         {"role": "system", "content": "You are a test assistant."},
-        {"role": "user", "content": "Which model are we using?"},
+        {"role": "user", "content": "Hello! How are you doing?"}
     ],
-    max_tokens=50,
 )
 
 print(response.choices[0].message.content)
