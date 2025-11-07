@@ -11,13 +11,7 @@ import random
 import numpy as np
 
 dataset_size = {
-    "gsm": 302,
-    "region": 16345,
-    "r1": 32690,
-    "r2": 121420,
-    "r1-region": 228830,
-    "r2-region": 849940,
-    "company": 1216535,
+    "green_skill" : 274
 }
 
 if __name__ == '__main__':
@@ -33,8 +27,8 @@ if __name__ == '__main__':
 
     # data loader
     parser.add_argument('--data', type=str, default='job_demand_region', help='dataset type')
-    parser.add_argument('--root_path', type=str, default='../../dataset/demand/', help='root path of the data file')
-    parser.add_argument('--data_path', type=str, default='region.parquet', help='data file')
+    parser.add_argument('--root_path', type=str, default='../../data/green_skill_classification', help='root path of the data file')
+    parser.add_argument('--data_path', type=str, default='data_for_timeseries.csv', help='data file')
     parser.add_argument('--features', type=str, default='M',
                         help='forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate')
     parser.add_argument('--target', type=str, default='OT', help='target feature in S or MS task')
@@ -142,8 +136,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # args.use_gpu = True if torch.cuda.is_available() and args.use_gpu else False
     args.use_gpu = args.use_gpu == 1
-    args.enc_in = args.dec_in = args.c_out = dataset_size[args.data_path.split('.')[0]]
-    args.skill_num = dataset_size['gsm']
+
+    args.enc_in = args.dec_in = args.c_out = dataset_size["green_skill"]
+    args.skill_num = dataset_size['green_skill']
 
     print(torch.cuda.is_available())
 

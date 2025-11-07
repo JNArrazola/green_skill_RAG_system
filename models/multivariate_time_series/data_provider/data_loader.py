@@ -59,6 +59,7 @@ class Dataset_Custom(Dataset):
         df_raw = df_raw[cols].T.reset_index()
         df_raw.columns = ['date'] + df_raw.columns[1:].tolist()
         cols_data = list(df_raw.columns)[1:]
+
         num_train = 27
         num_test = 6
         num_vali = 3
