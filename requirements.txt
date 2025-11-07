@@ -8,3 +8,8 @@ python-dotenv
 matplotlib
 jsonschema
 pydantic
+patool
+sktime
+torch
+reformer_pytorch
+hypnettorch
