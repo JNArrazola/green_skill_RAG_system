@@ -79,6 +79,56 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         self.model.train()
         return total_loss
 
+    def evaluate_checkpoints(exp, setting):
+        test_data, test_loader = exp._get_data(flag='test')
+        criterion = torch.nn.MSELoss()
+
+        model_dir = os.path.join(exp.args.checkpoints, setting)
+        checkpoints = [f for f in os.listdir(model_dir) if f.endswith('.pth')]
+        checkpoints.sort()
+
+        best_loss = float('inf')
+        best_file = None
+
+        for ckpt in checkpoints:
+            path = os.path.join(model_dir, ckpt)
+            exp.model.load_state_dict(torch.load(path, map_location=exp.device))
+            exp.model.eval()
+
+            total_loss = []
+            with torch.no_grad():
+                for batch_x, batch_y, batch_x_mark, batch_y_mark in test_loader:
+                    batch_x = batch_x.float().to(exp.device)
+                    batch_y = batch_y.float().to(exp.device)
+                    batch_x_mark = batch_x_mark.float().to(exp.device)
+                    batch_y_mark = batch_y_mark.float().to(exp.device)
+
+                    dec_inp = torch.zeros_like(batch_y[:, -exp.args.pred_len:, :]).float()
+                    dec_inp = torch.cat(
+                        [batch_y[:, :exp.args.label_len, :], dec_inp], dim=1
+                    ).float().to(exp.device)
+
+                    outputs = exp.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
+                    if isinstance(outputs, tuple): 
+                        outputs = outputs[0]
+
+                    f_dim = -1 if exp.args.features == 'MS' else 0
+                    outputs = outputs[:, -exp.args.pred_len:, f_dim:]
+                    batch_y = batch_y[:, -exp.args.pred_len:, f_dim:].to(exp.device)
+
+                    loss = criterion(outputs, batch_y)
+                    total_loss.append(loss.item())
+
+            avg_loss = np.mean(total_loss)
+            print(f"{ckpt}: Test Loss = {avg_loss:.6f}")
+
+            if avg_loss < best_loss:
+                best_loss = avg_loss
+                best_file = ckpt
+
+        print(f"\nBest model: {best_file} | Test Loss = {best_loss:.6f}")
+        torch.save(exp.model.state_dict(), os.path.join(model_dir, 'best_model.pth'))
+
     def train(self, setting):
         train_data, train_loader = self._get_data(flag='train')
         print(f"Train set size: {len(train_data)}")
@@ -157,6 +207,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
 
             torch.save(self.model.state_dict(), os.path.join(path, f"epoch_{epoch+1}.pth"))
 
+        self.evaluate_checkpoints(setting)
         print("Training finished")
         return self.model
 
@@ -165,7 +216,7 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         test_data, test_loader = self._get_data(flag='test')
         if test:
             print('loading model')
-            self.model.load_state_dict(torch.load(os.path.join(self.args.checkpoints  +  setting, 'checkpoint.pth'), map_location=self.device))
+            self.model.load_state_dict(torch.load(os.path.join(self.args.checkpoints  + "/" + setting, 'best_model.pth'), map_location=self.device))
 
         preds = []
         trues = []
@@ -269,40 +320,4 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         np.save(folder_path + 'true.npy', trues)
 
         return
-
-    def forecast_future(self, last_sequence, steps_ahead=6):
-        """
-        Do long-term forecasting given the last observed sequence.
-        last_sequence: numpy array de forma (seq_len, n_features)
-        steps_ahead: número de pasos (meses) a predecir
-        """
-        self.model.eval()
-        self.model.to(self.device)
-        preds = []
-
-        seq_len = self.args.seq_len
-        n_features = self.args.c_out
-
-        # Convertimos la secuencia inicial en tensor
-        current_seq = torch.tensor(last_sequence, dtype=torch.float32).unsqueeze(0).to(self.device)
-
-        with torch.no_grad():
-            for step in range(steps_ahead):
-                # Genera un dec_inp vacío del mismo tamaño que pred_len
-                dec_inp = torch.zeros((1, self.args.label_len + self.args.pred_len, n_features)).to(self.device)
-
-                # Predice un paso hacia adelante
-                outputs = self.model(current_seq, None, dec_inp, None)
-                outputs = outputs[:, -self.args.pred_len:, :].detach().cpu().numpy()
-
-                # Guardamos la predicción
-                preds.append(outputs[0, 0, :])  # (n_features,)
-
-                # Actualizamos la secuencia de entrada para la siguiente iteración
-                next_seq = np.concatenate([current_seq.cpu().numpy()[0, 1:, :], outputs[0]], axis=0)
-                current_seq = torch.tensor(next_seq, dtype=torch.float32).unsqueeze(0).to(self.device)
-
-        preds = np.array(preds)  # (steps_ahead, n_features)
-        print(f"Future predictions shape: {preds.shape}")
-        return preds
 

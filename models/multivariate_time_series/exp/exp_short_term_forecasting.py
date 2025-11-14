@@ -121,7 +121,8 @@ class Exp_Short_Term_Forecast(Exp_Basic):
 
             adjust_learning_rate(model_optim, epoch + 1, self.args)
 
-        best_model_path = path + '/' + 'checkpoint.pth'
+        model_name = self.args.model
+        best_model_path = path + '/' + model_name + "_best" + 'checkpoint.pth'
         self.model.load_state_dict(torch.load(best_model_path))
 
         return self.model

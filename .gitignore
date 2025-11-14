@@ -8,3 +8,4 @@ data/
 __pycache__/
 /models/multivariate_time_series/results/
 /models/multivariate_time_series/.cache/checkpoints/
+links.md
