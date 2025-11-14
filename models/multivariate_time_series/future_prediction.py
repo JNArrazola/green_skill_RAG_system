@@ -141,7 +141,7 @@ args = Namespace(
 
 args.enc_in = args.dec_in = args.c_out = dataset_size["green_skills"]
 
-def predict_future(exp : Exp_Long_Term_Forecast, setting : str, future_steps=3 : int, load_best=True : bool = True) -> torch.Tensor:
+def predict_future(exp, setting, future_steps=3, load_best=True):
     """ Predict future time steps using the trained model.
     Args:
         exp: Experiment object containing the model and data.
@@ -160,12 +160,20 @@ def predict_future(exp : Exp_Long_Term_Forecast, setting : str, future_steps=3 :
     if load_best:
         best_model_path = os.path.join(args.checkpoints, setting, 'best_model.pth') 
         exp.model.load_state_dict(torch.load(best_model_path, map_location=device))
-
-    exp.model.eval() # set model to evaluation mode
-
+    else:
+        pass 
+    
+    exp.model.eval() 
     test_data, test_loader = exp._get_data(flag='test') # get the test data
 
     batch_x, batch_y, batch_x_mark, batch_y_mark = list(test_loader)[-1] 
+
+    print("****")
+    print(batch_x, batch_x.shape)
+    print(batch_y, batch_y.shape)
+    print(batch_x_mark, batch_x_mark.shape)
+    print(batch_y_mark, batch_y_mark.shape)
+    print("****")
 
     # batch_x = (batch_size, seq_len, num_features)
     # batch_y = (batch_size, label_len + pred_len, num_features)
@@ -214,16 +222,12 @@ def predict_future(exp : Exp_Long_Term_Forecast, setting : str, future_steps=3 :
             else:
                 outputs = exp.model(current_x, current_x_mark, dec_inp, dec_inp_mark)
 
-            # Get the predicted values for the steps we wanted to predict
             pred = outputs[:, -steps_to_predict:, :]
-
             preds_total.append(pred.cpu()) 
 
-            # Update current_x with the new predictions for the next iteration
             current_x = torch.cat([current_x, pred], dim=1) 
             current_x_mark = torch.cat([current_x_mark, current_x_mark[:, -steps_to_predict:, :]], dim=1)
 
-            # Decrease the remaining steps
             remaining_steps -= steps_to_predict
 
     preds_total = torch.cat(preds_total, dim=1)
