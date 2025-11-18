@@ -4,7 +4,7 @@ from tqdm import tqdm
 SEQ_LEN = 4
 PRED_LEN = 3
 
-models = ["LSTM", "CHGH", "Autoformer", "DLinear", "Crossformer", "FEDformer", "FiML", "FreTS", "Informer", "Koopa", 
+models = ["LSTM", "CHGH", "Autoformer", "DLinear", "Crossformer", "FEDformer", "FiLM", "FreTS", "Informer", "Koopa", 
           "LightTS", "Nonstationary_Transformer", "PatchTST", "Reformer", "SegRNN", "TiDE", "Transformer", "TSMixer"]
 
 for model in tqdm(models, desc="Running models", unit="model"):

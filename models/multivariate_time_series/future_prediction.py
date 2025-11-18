@@ -47,7 +47,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--seq_len', type=int, default=6, help='Input sequence length')
 parser.add_argument('--pred_len', type=int, default=3, help='Prediction length per step')
-parser.add_argument('--model_folder', type=str, default='results/seq_6_len_3', help='Folder where model checkpoints are stored')
+parser.add_argument('--model_folder', type=str, default='n_results/seq_6_len_3', help='Folder where model checkpoints are stored')
 parser.add_argument('--model', type=str, default='Reformer', help='Model name')
 parser.add_argument('--future_steps', type=int, default=3, help='Number of future steps to predict')
 
@@ -61,11 +61,12 @@ args = Namespace(
 
     data='job_demand_region',
     root_path='../../data/green_skill_classification/',
-    data_path='data_for_timeseries.csv',
+    data_path='data_for_timeseries_normalized.csv',
     features='M',
     target='OT',
     freq='m',
-    checkpoints=f'.cache/checkpoints/seq_{args_parsed.seq_len}_len_{args_parsed.pred_len}',
+    # Change when normalized _n
+    checkpoints=f'.cache/checkpoints/n_seq_{args_parsed.seq_len}_len_{args_parsed.pred_len}',
 
     seq_len=args_parsed.seq_len,       
     label_len=1,
@@ -248,4 +249,4 @@ if __name__ == "__main__":
 
     print("Predicted:")
     print(future_pred) # shape: [1, future_steps, num_features]
-    torch.save(future_pred, f'../predictions/future_predictions_seq{args_parsed.seq_len}_pred{args_parsed.pred_len}_{args_parsed.model}.pt')
+    torch.save(future_pred, f'../predictions/n_future_predictions_seq{args_parsed.seq_len}_pred{args_parsed.pred_len}_{args_parsed.model}.pt')
