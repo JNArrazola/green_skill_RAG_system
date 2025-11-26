@@ -1,11 +1,11 @@
-## skill_growth_n_future_predictions_seq6_pred3_Informer.csv
+## skill_growth_n_future_predictions_seq4_pred3_Reformer.csv
 
 | Quadrant   | Count |
 |------------|-------|
-| Star | 31 |
-| Emerging | 38 |
-| Stable | 38 |
-| Declining | 167 |
+| Star | 24 |
+| Emerging | 45 |
+| Stable | 45 |
+| Declining | 160 |
 
 ## skill_growth_n_future_predictions_seq4_pred3_FEDformer.csv
 
@@ -16,39 +16,12 @@
 | Stable | 36 |
 | Declining | 169 |
 
-## skill_growth_n_future_predictions_seq6_pred3_Transformer.csv
-
-| Quadrant   | Count |
-|------------|-------|
-| Star | 32 |
-| Emerging | 37 |
-| Stable | 37 |
-| Declining | 168 |
-
 ## skill_growth_n_future_predictions_seq4_pred3_Informer.csv
 
 | Quadrant   | Count |
 |------------|-------|
-| Star | 28 |
-| Emerging | 41 |
-| Stable | 41 |
-| Declining | 164 |
-
-## skill_growth_n_future_predictions_seq4_pred3_Transformer.csv
-
-| Quadrant   | Count |
-|------------|-------|
-| Star | 28 |
-| Emerging | 41 |
-| Stable | 41 |
-| Declining | 164 |
-
-## skill_growth_n_future_predictions_seq6_pred3_FEDformer.csv
-
-| Quadrant   | Count |
-|------------|-------|
-| Star | 35 |
-| Emerging | 34 |
-| Stable | 34 |
-| Declining | 171 |
+| Star | 27 |
+| Emerging | 42 |
+| Stable | 42 |
+| Declining | 163 |
 
